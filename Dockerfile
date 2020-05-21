@@ -11,7 +11,7 @@ COPY . .
 RUN npm install
 
 #le port d'écoute du conteneur
-EXPOSE 8080
+EXPOSE 8000
 
 #spécification des commandes qui seront toujours exécutée au démarrage du conteneur
 ENTRYPOINT ["npm", "start"]

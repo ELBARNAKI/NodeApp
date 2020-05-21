@@ -2,10 +2,10 @@
   "name": "node",
   "version": "1.0.0",
   "description": "",
-  "main": "test2.js",
+  "main": "app.js",
   "scripts": {
     "test": "mocha --reporter spec",
-    "start": "node   test2.js"
+    "start": "node   app.js"
   },
   "author": "ELBARNAKI",
   "license": "ISC",
