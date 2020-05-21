@@ -8,8 +8,18 @@ pipeline{
             steps{
                 sh "docker build . -t elbarnaki/nodeapp:${DOCKER_TAG} "
             }
+        }
+        stage('DockerHub Push'){
+           steps{
+                withCredentials([string(credentialsId: 'docker-hub', variable: 'dockhubpwd')]) {
+                    sh "docker login -u elbarnaki -p ${dockhubpwd}"
+                    sh "docker push elbarnaki/nodeapp:${DOCKER_TAG}"
+                }
+           }
             
         }
+            
+        
     }
 }
 
