@@ -1,0 +1,20 @@
+{
+  "name": "node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test2.js",
+  "scripts": {
+    "test": "mocha --reporter spec",
+    "start": "node   test2.js"
+  },
+  "author": "ELBARNAKI",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ELBARNAKI/TEST1.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ELBARNAKI/TEST1/issues"
+  },
+  "homepage": "https://github.com/ELBARNAKI/TEST1#readme"
+}
