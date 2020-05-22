@@ -15,11 +15,28 @@ pipeline{
                     sh "docker login -u elbarnaki -p ${dockhubpwd}"
                     sh "docker push elbarnaki/nodeapp:${DOCKER_TAG}"
                 }
-           }
-            
-        }
-            
-        
+           }  
+        } 
+        stage('Deploy to k8s'){
+            steps{
+                sh "chmod +x changeTag.sh"
+                sh "./changeTag.sh ${DOCKER_TAG}"
+                sshagent(['kubmaster']) {
+                 sh " scp -o StrictHostKeyChecking=no services.yml node-app-pode.yml master@20.42.100.8:/home/master/"
+                 script{
+                        try{
+                            sh "ssh master@20.42.100.8 kubectl apply -f ."
+                        }catch(error){
+                            sh "ssh master@20.42.100.8 kubectl create -f ."
+                        }
+                    }
+                
+                }
+
+            }
+
+        } 
+             
     }
 }
 
