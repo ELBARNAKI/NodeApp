@@ -17,6 +17,25 @@ pipeline{
                 }
            }  
         } 
+        stage('Deploy to k8s'){
+            steps{
+                sh "chmod +x changeTag.sh"
+                sh "./changeTag.sh ${DOCKER_TAG}"
+                sshagent(['kubmaster']) {
+                 sh " scp -o StrictHostKeyChecking=no services.yml node-app-pode.yml master@40.66.33.124:/home/master/"
+                 script{
+                        try{
+                            sh "ssh master@40.66.33.124 kubectl apply -f ."
+                        }catch(error){
+                            sh "ssh master@40.66.33.124 kubectl create -f ."
+                        }
+                    }
+                
+                }
+
+            }
+
+        } 
              
     }
 }
