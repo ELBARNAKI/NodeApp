@@ -17,17 +17,17 @@ pipeline{
                 }
            }  
         } 
-         stage('Deploy to Kubernetes'){
+         /*stage('Deploy to Kubernetes'){
             steps{
                 sh "chmod +x changeTag.sh"
                 sh "./changeTag.sh ${DOCKER_TAG}"
                 sshagent(['kubmaster']) {
-                 sh " scp -o StrictHostKeyChecking=no services.yml node-app-pod.yml master@13.90.57.33:/home/master/"
+                 sh " scp -o StrictHostKeyChecking=no services.yml node-app-pod.yml master@20.43.57.20:/home/master/"
                  script{
                         try{
-                            sh "ssh master@13.90.57.33 sudo kubectl apply -f ."
+                            sh "ssh master@20.43.57.20 sudo kubectl apply -f ."
                         }catch(error){
-                            sh "ssh master@13.90.57.33 sudo kubectl create -f ."
+                            sh "ssh master@20.43.57.20 sudo kubectl create -f ."
                         }
                     }
                 
@@ -35,7 +35,7 @@ pipeline{
 
             }
 
-        } 
+        }*/
              
     }
 }
