@@ -47,17 +47,19 @@ pipeline{
         }
         stage("Approve VAL & PROD Deployments"){
             when {
-                anyOf {
-                    allOf {
-                        branch 'master'
-                        environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=false, VAL deployment ?=true}'
-                    }
-                    allOf {
-                        branch 'master'
-                        environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true, VAL deployment ?=true}'
+                branch 'master'
+            }
+            steps { 
+                timeout(time: 7, unit: 'DAYS') {
+                    script {
+                        env.APPROVE_DEPLOY = input(message: 'Approve deployments', 
+                        parameters: [booleanParam(defaultValue: false, 
+                        description: 'Approve ?', name: 'VAL deployment ?'),booleanParam(defaultValue: false, 
+                        description: 'Approve ?', name: 'PROD deployment ?')])
                     }
                 }
-            } 
+                sh "echo ${env.APPROVE_DEPLOY}"
+            }
         }
         stage('Deploy to VAL'){
            when {
