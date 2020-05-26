@@ -51,7 +51,9 @@ pipeline{
             when {
                 branch 'master'
             }
-            input{ message "Do you want to proceed for production deployment?" }
+            script{
+                  input{ message "Do you want to proceed for production deployment?" }
+            }
         } 
         stage('Deploy to PROD'){
             when {
