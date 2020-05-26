@@ -5,11 +5,17 @@ pipeline{
     }
     stages{
         stage ('Build Docker Image'){
+            when {
+              branch 'developer'
+            }
             steps{
                 sh "docker build . -t elbarnaki/nodeapp:${DOCKER_TAG} "
             }
         }
         stage('DockerHub Push'){
+           when {
+              branch 'developer'
+            }
            steps{
                 withCredentials([string(credentialsId: 'docker-hub', variable: 'dockhubpwd')]) {
                     sh "docker login -u elbarnaki -p ${dockhubpwd}"
