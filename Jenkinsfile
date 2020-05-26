@@ -11,14 +11,14 @@ pipeline{
     stages{
         stage ('Build Docker Image'){
             steps{
-                sh "docker build . -t elbarnaki/nodeapp:${DOCKER_TAG}'/'${project}'/'^${appName} "
+                sh "docker build . -t elbarnaki/nodeapp:${DOCKER_TAG}'/'${project}'/'${appName} "
             }
         }
         stage('DockerHub Push'){
            steps{
                 withCredentials([string(credentialsId: 'docker-hub', variable: 'dockhubpwd')]) {
                     sh "docker login -u elbarnaki -p ${dockhubpwd}"
-                    sh "docker push elbarnaki/nodeapp:${DOCKER_TAG}'/'${project}'/'^${appName} "
+                    sh "docker push elbarnaki/nodeapp:${DOCKER_TAG}'/'${project}'/'${appName} "
                 }
            }  
         }
