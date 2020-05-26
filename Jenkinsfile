@@ -62,7 +62,7 @@ pipeline{
         //         sh "echo ${env.APPROVE_DEPLOY}"
         //     }
         // }
-        stage('PROD & VAL Deployments'){
+        stage('VAL & PROD Deployments'){
             parallel{
                 stage('Deploy to VAL'){
                     when {
@@ -78,7 +78,7 @@ pipeline{
                             // }
                             branch 'master'
                         }
-                    input{ message "Do you want to proceed for production deployment ?" }
+                    input{ message "Do you want to proceed for VAL deployment ?" }
                     steps{
                         sh "chmod +x changeTag.sh"
                         sh "./changeTag.sh ${DOCKER_TAG}"
