@@ -6,7 +6,7 @@ pipeline{
     stages{
         stage ('Build Docker Image'){
             when {
-              branch 'developer'
+              branch 'DEV'
             }
             steps{
                 sh "docker build . -t elbarnaki/nodeapp:${DOCKER_TAG} "
@@ -14,7 +14,7 @@ pipeline{
         }
         stage('DockerHub Push'){
            when {
-              branch 'developer'
+              branch 'DEV'
             }
            steps{
                 withCredentials([string(credentialsId: 'docker-hub', variable: 'dockhubpwd')]) {
@@ -26,7 +26,7 @@ pipeline{
         //
         stage('Deploy to Kubernetes'){
             when {
-              branch 'developer'
+              branch 'DEV'
             }
             steps{
                 sh "chmod +x changeTag.sh"
