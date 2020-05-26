@@ -47,31 +47,32 @@ pipeline{
             }
 
         }
-        stage ("Approve PROD Deployments") {
-            when {
-                branch 'master'
-            }
-            steps { 
-                timeout(time: 7, unit: 'DAYS') {
-                    script {
-                        env.APPROVE_DEPLOY = input(message: 'Approve deployments', 
-                        parameters: [booleanParam(defaultValue: false, 
-                        description: 'Approve ?', name: 'PROD deployment ?')])
-                    }
-                }
-                sh "echo ${env.APPROVE_DEPLOY}"
-            }
-        } 
+        // stage ("Approve PROD Deployments") {
+        //     when {
+        //         branch 'master'
+        //     }
+        //     steps { 
+        //         timeout(time: 7, unit: 'DAYS') {
+        //             script {
+        //                 env.APPROVE_DEPLOY = input(message: 'Approve deployments', 
+        //                 parameters: [booleanParam(defaultValue: false, 
+        //                 description: 'Approve ?', name: 'PROD deployment ?')])
+        //             }
+        //         }
+        //         sh "echo ${env.APPROVE_DEPLOY}"
+        //     }
+        // } 
         //
         stage('Deploy to PROD'){
             when {
                 // anyOf {
-                allOf {
-                    branch 'master'
-                    environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true}'
-                    }
+                // allOf {
+                branch 'master'
+                    // environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true}'
+                // }
                 // }
             }
+            input{ message "Do you want to proceed for production deployment?" }
             steps{
                 sh "chmod +x changeTag.sh"
                 sh "./changeTag.sh ${DOCKER_TAG}"
