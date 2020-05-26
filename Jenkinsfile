@@ -11,7 +11,7 @@ pipeline{
     stages{
         stage ('Build Docker Image'){
             steps{
-                sh "docker build . -t elbarnaki/nodeapp:${DOCKER_TAG} "
+                sh "docker build . -t elbarnaki/nodeapp:${DOCKER_TAG}'/'${project}'/'^${appName} "
             }
         }
         stage('DockerHub Push'){
