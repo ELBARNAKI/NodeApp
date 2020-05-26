@@ -57,7 +57,8 @@ pipeline{
                         environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true, VAL deployment ?=true}'
                     }
                 }
-        } 
+            } 
+        }
         stage('Deploy to VAL'){
            when {
                 anyOf {
