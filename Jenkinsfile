@@ -18,6 +18,9 @@ pipeline{
            }  
         } 
         stage('Deploy to Kubernetes'){
+            when {
+              branch 'developer'
+            }
             steps{
                 sh "chmod +x changeTag.sh"
                 sh "./changeTag.sh ${DOCKER_TAG}"
