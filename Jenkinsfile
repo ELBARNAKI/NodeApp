@@ -66,10 +66,10 @@ pipeline{
         stage('Deploy to PROD'){
             when {
                 // anyOf {
-                    // allOf {
-                branch 'master'
-                environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true}'
-                    // }
+                allOf {
+                    branch 'master'
+                    environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true}'
+                    }
                 // }
             }
             steps{
