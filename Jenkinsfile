@@ -45,35 +45,38 @@ pipeline{
             }
 
         }
-        stage("Approve VAL & PROD Deployments"){
-            when {
-                branch 'master'
-            }
-            steps { 
-                timeout(time: 7, unit: 'DAYS') {
-                    script {
-                        env.APPROVE_DEPLOY = input(message: 'Approve deployments', 
-                        parameters: [booleanParam(defaultValue: false, 
-                        description: 'Approve ?', name: 'VAL deployment ?'),booleanParam(defaultValue: false, 
-                        description: 'Approve ?', name: 'PROD deployment ?')])
-                    }
-                }
-                sh "echo ${env.APPROVE_DEPLOY}"
-            }
-        }
+        // stage("Approve VAL & PROD Deployments"){
+        //     when {
+        //         branch 'master'
+        //     }
+        //     steps { 
+        //         timeout(time: 7, unit: 'DAYS') {
+        //             script {
+        //                 env.APPROVE_DEPLOY = input(message: 'Approve deployments', 
+        //                 parameters: [booleanParam(defaultValue: false, 
+        //                 description: 'Approve ?', name: 'VAL deployment ?'),booleanParam(defaultValue: false, 
+        //                 description: 'Approve ?', name: 'PROD deployment ?')])
+        //             }
+        //         }
+
+        //         sh "echo ${env.APPROVE_DEPLOY}"
+        //     }
+        // }
         stage('Deploy to VAL'){
            when {
-                anyOf {
-                    allOf {
-                        branch 'master'
-                        environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=false, VAL deployment ?=true}'
-                    }
-                    allOf {
-                        branch 'master'
-                        environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true, VAL deployment ?=true}'
-                    }
-                }
+                // anyOf {
+                //     allOf {
+                //         branch 'master'
+                //         environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=false, VAL deployment ?=true}'
+                //     }
+                //     allOf {
+                //         branch 'master'
+                //         environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true, VAL deployment ?=true}'
+                //     }
+                // }
+                branch 'master'
             }
+            input{ message "Do you want to proceed for production deployment ?" }
             steps{
                 sh "chmod +x changeTag.sh"
                 sh "./changeTag.sh ${DOCKER_TAG}"
@@ -93,17 +96,19 @@ pipeline{
         }
         stage('Deploy to PROD'){
             when {
-                anyOf {
-                    allOf {
-                        branch 'master'
-                        environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true, VAL deployment ?=false}'
-                    }
-                    allOf {
-                        branch 'master'
-                        environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true, VAL deployment ?=true}'
-                    }
-                }
+                // anyOf {
+                //     allOf {
+                //         branch 'master'
+                //         environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true, VAL deployment ?=false}'
+                //     }
+                //     allOf {
+                //         branch 'master'
+                //         environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true, VAL deployment ?=true}'
+                //     }
+                // }
+               branch 'master' 
             }
+            input{ message "Do you want to proceed for production deployment?" }
             steps{
                 sh "chmod +x changeTag.sh"
                 sh "./changeTag.sh ${DOCKER_TAG}"
