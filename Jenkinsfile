@@ -65,9 +65,6 @@ pipeline{
         //
         stage('Deploy to PROD'){
             when {
-              branch 'master'
-            }
-            when {
                 anyOf {
                     allOf {
                         branch 'master'
