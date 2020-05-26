@@ -22,11 +22,58 @@ pipeline{
                     sh "docker push elbarnaki/nodeapp:${DOCKER_TAG}"
                 }
            }  
-        } 
+        }
         //
-        stage('Deploy to Kubernetes'){
+        
+        stage('Deploy to DEV'){
             when {
               branch 'DEV'
+            }
+            steps{
+                sh "chmod +x changeTag.sh"
+                sh "./changeTag.sh ${DOCKER_TAG}"
+                sshagent(['kubmaster']) {
+                 sh " scp -o StrictHostKeyChecking=no services.yml node-app-pod.yml master@40.89.143.198:/home/master/"
+                 script{
+                        try{
+                            sh "ssh master@40.89.143.198  kubectl apply -f ."
+                        }catch(error){
+                            sh "ssh master@40.89.143.198  kubectl create -f ."
+                        }
+                    }
+                
+                }
+
+            }
+
+        }
+        stage ("Approve PROD Deployments") {
+            when {
+                branch 'master'
+            }
+            steps { 
+                timeout(time: 7, unit: 'DAYS') {
+                    script {
+                        env.APPROVE_DEPLOY = input(message: 'Approve deployments', 
+                        parameters: [booleanParam(defaultValue: false, 
+                        description: 'Approve ?', name: 'PROD deployment ?')])
+                    }
+                }
+                sh "echo ${env.APPROVE_DEPLOY}"
+            }
+        } 
+        //
+        stage('Deploy to PROD'){
+            when {
+              branch 'master'
+            }
+            when {
+                anyOf {
+                    allOf {
+                        branch 'master'
+                        environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true}'
+                    }
+                }
             }
             steps{
                 sh "chmod +x changeTag.sh"
