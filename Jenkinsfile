@@ -62,70 +62,75 @@ pipeline{
         //         sh "echo ${env.APPROVE_DEPLOY}"
         //     }
         // }
-        stage('Deploy to VAL'){
-           when {
-                // anyOf {
-                //     allOf {
-                //         branch 'master'
-                //         environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=false, VAL deployment ?=true}'
-                //     }
-                //     allOf {
-                //         branch 'master'
-                //         environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true, VAL deployment ?=true}'
-                //     }
-                // }
-                branch 'master'
-            }
-            input{ message "Do you want to proceed for production deployment ?" }
-            steps{
-                sh "chmod +x changeTag.sh"
-                sh "./changeTag.sh ${DOCKER_TAG}"
-                sshagent(['kubmaster']) {
-                 sh " scp -o StrictHostKeyChecking=no services.yml node-app-pod.yml master@40.89.143.198:/home/master/"
-                 script{
-                        try{
-                            sh "ssh master@40.89.143.198  kubectl apply -f ."
-                        }catch(error){
-                            sh "ssh master@40.89.143.198  kubectl create -f ."
+        stage('PROD & VAL Deployments'){
+            parallel{
+                stage('Deploy to VAL'){
+                    when {
+                            // anyOf {
+                            //     allOf {
+                            //         branch 'master'
+                            //         environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=false, VAL deployment ?=true}'
+                            //     }
+                            //     allOf {
+                            //         branch 'master'
+                            //         environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true, VAL deployment ?=true}'
+                            //     }
+                            // }
+                            branch 'master'
                         }
-                    }
-                
-                }
-
-            }
-        }
-        stage('Deploy to PROD'){
-            when {
-                // anyOf {
-                //     allOf {
-                //         branch 'master'
-                //         environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true, VAL deployment ?=false}'
-                //     }
-                //     allOf {
-                //         branch 'master'
-                //         environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true, VAL deployment ?=true}'
-                //     }
-                // }
-               branch 'master' 
-            }
-            input{ message "Do you want to proceed for production deployment?" }
-            steps{
-                sh "chmod +x changeTag.sh"
-                sh "./changeTag.sh ${DOCKER_TAG}"
-                sshagent(['kubmaster']) {
-                 sh " scp -o StrictHostKeyChecking=no services.yml node-app-pod.yml master@40.89.143.198:/home/master/"
-                 script{
-                        try{
-                            sh "ssh master@40.89.143.198  kubectl apply -f ."
-                        }catch(error){
-                            sh "ssh master@40.89.143.198  kubectl create -f ."
+                    input{ message "Do you want to proceed for production deployment ?" }
+                    steps{
+                        sh "chmod +x changeTag.sh"
+                        sh "./changeTag.sh ${DOCKER_TAG}"
+                        sshagent(['kubmaster']) {
+                        sh " scp -o StrictHostKeyChecking=no services.yml node-app-pod.yml master@40.89.143.198:/home/master/"
+                        script{
+                                try{
+                                    sh "ssh master@40.89.143.198  kubectl apply -f ."
+                                }catch(error){
+                                    sh "ssh master@40.89.143.198  kubectl create -f ."
+                                }
+                            }
+                        
                         }
+
                     }
-                
-                }
+                } 
+                stage('Deploy to PROD'){
+                    when {
+                        // anyOf {
+                        //     allOf {
+                        //         branch 'master'
+                        //         environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true, VAL deployment ?=false}'
+                        //     }
+                        //     allOf {
+                        //         branch 'master'
+                        //         environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true, VAL deployment ?=true}'
+                        //     }
+                        // }
+                    branch 'master' 
+                    }
+                    input{ message "Do you want to proceed for production deployment?" }
+                    steps{
+                        sh "chmod +x changeTag.sh"
+                        sh "./changeTag.sh ${DOCKER_TAG}"
+                        sshagent(['kubmaster']) {
+                        sh " scp -o StrictHostKeyChecking=no services.yml node-app-pod.yml master@40.89.143.198:/home/master/"
+                        script{
+                                try{
+                                    sh "ssh master@40.89.143.198  kubectl apply -f ."
+                                }catch(error){
+                                    sh "ssh master@40.89.143.198  kubectl create -f ."
+                                }
+                            }
+                        
+                        }
 
+                    }
+
+                } 
             }
-
+        
         }
              
     }
