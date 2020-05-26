@@ -24,16 +24,16 @@ pipeline{
         }
 
     //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    
-    stage (" Deploy to DEV ") {
-      when { branch 'developer'} 
-        steps{
-           sh "chmod +x changeTag.sh"
-           sh "./changeTag.sh ${DOCKER_TAG}"
-            sshagent(['kubmaster']) {
-            sh " scp -o StrictHostKeyChecking=no services.yml node-app-pod.yml ${dev_path}"
-                script{
-                     try{
+
+        stage (" Deploy to DEV ") {
+         when { branch 'developer'} 
+           steps{
+               sh "chmod +x changeTag.sh"
+               sh "./changeTag.sh ${DOCKER_TAG}"
+               sshagent(['kubmaster']) {
+                 sh " scp -o StrictHostKeyChecking=no services.yml node-app-pod.yml ${dev_path}"
+                 script{
+                        try{
                          sh "ssh master@40.89.143.198  kubectl --namespace=${env.BRANCH_NAME} apply -f ."
                         }catch(error){
                          sh "ssh master@40.89.143.198  kubectl --namespace=${env.BRANCH_NAME} create -f ."
@@ -43,20 +43,18 @@ pipeline{
 
             }  
         }
-       
-    }
 
  ////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     
-    stage ("Deploy to PROD") {
-      when { branch 'master'} 
-        steps{
-           sh "chmod +x changeTag.sh"
-           sh "./changeTag.sh ${DOCKER_TAG}"
-            sshagent(['kubmaster']) {
-            sh " scp -o StrictHostKeyChecking=no services.yml node-app-pod.yml ${prod_path}"
-                script{
-                     try{
+        stage ("Deploy to PROD") {
+          when { branch 'master'} 
+            steps{
+               sh "chmod +x changeTag.sh"
+               sh "./changeTag.sh ${DOCKER_TAG}"
+               sshagent(['kubmaster']) {
+                   sh " scp -o StrictHostKeyChecking=no services.yml node-app-pod.yml ${prod_path}"
+                   script{
+                        try{
                          sh "ssh master@40.89.143.198  kubectl --namespace=${env.BRANCH_NAME} apply -f ."
                         }catch(error){
                          sh "ssh master@40.89.143.198  kubectl --namespace=${env.BRANCH_NAME} create -f ."
