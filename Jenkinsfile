@@ -22,40 +22,6 @@ pipeline{
                 }
            }  
         }
-
-    /////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-    /*stage ("Deploy to DEV") {
-      when {branch 'developer'} {
-        anyOf {
-          allOf {
-            changeset "${env.K8S_YAML_DEV}"
-            branch 'dev'
-          }
-          allOf {
-            changeset "${env.VERSION}"
-            branch 'dev'
-          }
-        }
-      steps {
-           sh "chmod +x changeTag.sh"
-           sh "./changeTag.sh ${DOCKER_TAG}"
-           sshagent(['kubmaster']) {
-            sh " scp -o StrictHostKeyChecking=no services.yml node-app-pod.yml master@40.89.143.198:/home/master/"
-            script{
-                 try{
-                    sh "ssh master@40.89.143.198  kubectl apply -f ."
-                    }catch(error){
-                    sh "ssh master@40.89.143.198  kubectl create -f ."
-                    }
-                }
-            sh "sed -i 's/docker_image_tag/'${env.TAG}'/' ${env.K8S_YAML_DEV}"
-            sh "kubectl apply --context=${env.K8S_CONTEXT_DEV} -f ${env.K8S_YAML_DEV}"
-
-             } 
-        }*/
-    }
-
- ////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
     
     stage ("Deploy to PROD") {
       when { branch 'master' }
