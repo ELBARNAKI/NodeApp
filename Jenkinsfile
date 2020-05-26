@@ -47,14 +47,14 @@ pipeline{
             }
 
         }
-        stage ("Approve PROD Deployments") {
+        stage("Approve PROD Deployments"){
             when {
                 branch 'master'
             }
             input{ message "Do you want to proceed for production deployment?" }
-            // steps { 
+            steps { 
                 
-            // }
+            }
         } 
         
         stage('Deploy to PROD'){
