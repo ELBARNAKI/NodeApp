@@ -65,12 +65,12 @@ pipeline{
         //
         stage('Deploy to PROD'){
             when {
-                anyOf {
-                    allOf {
-                        branch 'master'
-                        environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true}'
-                    }
-                }
+                // anyOf {
+                    // allOf {
+                branch 'master'
+                environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true}'
+                    // }
+                // }
             }
             steps{
                 sh "chmod +x changeTag.sh"
