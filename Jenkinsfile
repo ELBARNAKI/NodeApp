@@ -23,8 +23,6 @@ pipeline{
                 }
            }  
         }
-        //
-        
         stage('Deploy to DEV'){
             when {
               branch 'DEV'
@@ -59,7 +57,6 @@ pipeline{
                         environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true, VAL deployment ?=true}'
                     }
                 }
-            }
         } 
         stage('Deploy to VAL'){
            when {
@@ -105,24 +102,6 @@ pipeline{
                     }
                 }
             }
-            steps{
-                sh "chmod +x changeTag.sh"
-                sh "./changeTag.sh ${DOCKER_TAG}"
-                sshagent(['kubmaster']) {
-                 sh " scp -o StrictHostKeyChecking=no services.yml node-app-pod.yml master@40.89.143.198:/home/master/"
-                 script{
-                        try{
-                            sh "ssh master@40.89.143.198  kubectl apply -f ."
-                        }catch(error){
-                            sh "ssh master@40.89.143.198  kubectl create -f ."
-                        }
-                    }
-                
-                }
-
-            }
-
-        }
             steps{
                 sh "chmod +x changeTag.sh"
                 sh "./changeTag.sh ${DOCKER_TAG}"
