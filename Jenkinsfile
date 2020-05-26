@@ -17,7 +17,7 @@ pipeline{
                 }
            }  
         } 
-        ///***
+        ///***////*****/////
         stage('Deploy to Kubernetes'){
             when {
               branch 'developer'
