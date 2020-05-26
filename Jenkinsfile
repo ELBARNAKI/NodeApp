@@ -1,8 +1,6 @@
 pipeline{
     agent any
     environment{
-        def project = 'Agri-Project'
-        def appName = 'NodeApp'
         def dev_path = 'master@40.89.143.198:/home/master/dev'
         def prod_path = 'master@40.89.143.198:/home/master/prod'
         DOCKER_TAG= getDockerTag()
