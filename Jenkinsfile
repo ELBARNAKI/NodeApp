@@ -23,9 +23,8 @@ pipeline{
            }  
         }
 
-    //////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
-
-        stage (" Deploy to DEV ") {
+    ///\
+        stage (" Deploy to Dev_Env_K8s ") {
          when { branch 'developer'} 
            steps{
                sh "chmod +x changeTag.sh"
@@ -44,9 +43,9 @@ pipeline{
             }  
         }
 
- ////////////////////////////////////////\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+    ///\
     
-        stage ("Deploy to PROD") {
+        stage (" Deploy to Prod_Env_K8s ") {
           when { branch 'master'} 
             steps{
                sh "chmod +x changeTag.sh"
