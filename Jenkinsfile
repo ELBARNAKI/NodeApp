@@ -45,37 +45,10 @@ pipeline{
             }
 
         }
-        // stage("Approve VAL & PROD Deployments"){
-        //     when {
-        //         branch 'master'
-        //     }
-        //     steps { 
-        //         timeout(time: 7, unit: 'DAYS') {
-        //             script {
-        //                 env.APPROVE_DEPLOY = input(message: 'Approve deployments', 
-        //                 parameters: [booleanParam(defaultValue: false, 
-        //                 description: 'Approve ?', name: 'VAL deployment ?'),booleanParam(defaultValue: false, 
-        //                 description: 'Approve ?', name: 'PROD deployment ?')])
-        //             }
-        //         }
-
-        //         sh "echo ${env.APPROVE_DEPLOY}"
-        //     }
-        // }
-        stage('VAL & PROD Deployments'){
+        stage(' Deploy to VAL & PROD '){
             parallel{
                 stage('Deploy to VAL'){
                     when {
-                            // anyOf {
-                            //     allOf {
-                            //         branch 'master'
-                            //         environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=false, VAL deployment ?=true}'
-                            //     }
-                            //     allOf {
-                            //         branch 'master'
-                            //         environment name: 'APPROVE_DEPLOY', value: '{PROD deployment ?=true, VAL deployment ?=true}'
-                            //     }
-                            // }
                             branch 'master'
                         }
                     input{ message "Do you want to proceed for VAL deployment ?" }
