@@ -1,8 +1,9 @@
-kind: Service
 apiVersion: v1
+kind: Service
 metadata:
-  name: nodeapp
+  name: nodeapp-svc
 spec:
+  type: NodePort 
   selector:
     app: nodeapp
   ports:
@@ -10,4 +11,4 @@ spec:
     port: 80
     targetPort: 8000
     nodePort: 32101
-  type: NodePort  
+   
