@@ -48,6 +48,7 @@ pipeline{
         stage('Deploy to VAL'){
             when {
                     branch 'master'
+                    beforeInput true
                 }
             input{ message "Do you want to proceed for VAL deployment ?" }
             steps{
@@ -71,6 +72,7 @@ pipeline{
         stage('Deploy to PROD'){
             when {
             branch 'master' 
+            beforeInput true
             }
             input{ message "Do you want to proceed for production deployment ?" }
             steps{
