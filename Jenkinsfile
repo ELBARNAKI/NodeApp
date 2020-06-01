@@ -49,9 +49,8 @@ pipeline{
             when {
                     branch 'master'
                 }
-            
+            input{ message "Do you want to proceed for VAL deployment ?" }
             steps{
-                input{ message "Do you want to proceed for VAL deployment ?" }
                 sh "chmod +x changeTag.sh"
                 sh "./changeTag.sh ${DOCKER_TAG}"
                 sshagent(['kubmaster']) {
@@ -73,8 +72,8 @@ pipeline{
             when {
             branch 'master' 
             }
+            input{ message "Do you want to proceed for production deployment ?" }
             steps{
-                input{ message "Do you want to proceed for production deployment ?" }
                 sh "chmod +x changeTag.sh"
                 sh "./changeTag.sh ${DOCKER_TAG}"
                 sshagent(['kubmaster']) {
